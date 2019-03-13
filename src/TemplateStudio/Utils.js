@@ -22,7 +22,7 @@ import { ModelFile } from 'composer-concerto';
 
 /* Ergo */
 
-import Ergo from '@accordproject/ergo-compiler/lib/ergo.js';
+import Ergo from '@accordproject/ergo-compiler/lib/compiler.js';
 
 function getUrlVars() {
   const vars = {};
@@ -174,15 +174,24 @@ function compileLogic(editor, markers, logic, model, log) {
 }
 
 function runLogic(compiledLogic, contract, request, cstate) {
-  const params = { contract, request, state: cstate, emit: [], now: moment() }; // eslint-disable-line no-unused-vars
-  const clauseCall = 'dispatch(params);'; // Create the clause call
+  const params = {
+    contract,
+    request,
+    state: cstate,
+    emit: [],
+    now: moment() }; // eslint-disable-line no-unused-vars
+  const clauseCall = `dispatch(${params});`; // Create the clause call
   const response = eval(compiledLogic + clauseCall); // Call the logic
   return response;
 }
 
 function runInit(compiledLogic, contract) {
-  const params = { contract, request: null, state: null, emit: [], now: moment() }; // eslint-disable-line no-unused-vars
-  const clauseCall = 'init(params);'; // Create the clause call
+  const params = {
+    contract,
+    request: null,
+    emit: [],
+    now: moment() }; // eslint-disable-line no-unused-vars
+  const clauseCall = `__init(${params})`; // Create the clause call
   const response = eval(compiledLogic + clauseCall); // Call the logic
   return response;
 }
